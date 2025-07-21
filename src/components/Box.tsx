@@ -1,9 +1,11 @@
 import { useState } from 'react';
+import { MovieType } from '../App';
 
 interface ListBoxProps {
   children: React.ReactNode;
 }
-function ListBox({ children }: ListBoxProps) {
+
+function Box({ children }: ListBoxProps) {
   const [isOpen1, setIsOpen1] = useState<boolean>(true);
 
   return (
@@ -16,4 +18,4 @@ function ListBox({ children }: ListBoxProps) {
   );
 }
 
-export default ListBox;
+export default Box;

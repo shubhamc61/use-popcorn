@@ -1,4 +1,4 @@
-import { WatchedMovie } from './WatchedBox';
+import { WatchedMovie } from '../App';
 import WatchedMovieTile from './WatchedMovieTile';
 
 interface WatchedMovieListProps {

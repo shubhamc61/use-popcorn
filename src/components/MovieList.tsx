@@ -1,6 +1,6 @@
 import { useState } from 'react';
 
-import MovieTile from './Movie';
+import MovieTile from './MovieTile';
 import { MovieType } from '../App';
 
 interface MovieListProp {

@@ -4,37 +4,7 @@ import WatchedSummary from './WatchedSummary';
 import WatchedMovieList from './WatchedMoviesList';
 import { MovieType } from '../App';
 
-export type WatchedMovie = MovieType & {
-  runtime: number;
-  imdbRating: number;
-  userRating: number;
-};
-
-const tempWatchedData: WatchedMovie[] = [
-  {
-    imdbID: 'tt1375666',
-    Title: 'Inception',
-    Year: '2010',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
-    runtime: 148,
-    imdbRating: 8.8,
-    userRating: 10,
-  },
-  {
-    imdbID: 'tt0088763',
-    Title: 'Back to the Future',
-    Year: '1985',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg',
-    runtime: 116,
-    imdbRating: 8.5,
-    userRating: 9,
-  },
-];
 function WatchedBox() {
-  const [watched, setWatched] = useState<WatchedMovie[]>(tempWatchedData);
-
   const [isOpen2, setIsOpen2] = useState<boolean>(true);
 
   return (
@@ -42,12 +12,7 @@ function WatchedBox() {
       <button className='btn-toggle' onClick={() => setIsOpen2(open => !open)}>
         {isOpen2 ? '–' : '+'}
       </button>
-      {isOpen2 && (
-        <>
-          <WatchedSummary watched={watched} />
-          <WatchedMovieList watched={watched} />
-        </>
-      )}
+      {isOpen2 && <></>}
     </div>
   );
 }
