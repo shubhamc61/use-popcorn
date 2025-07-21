@@ -4,8 +4,7 @@ import Main from './components/Main';
 import Logo from './components/Logo';
 import Search from './components/Search';
 import NumResults from './components/NumResults';
-import ListBox from './components/Box';
-import WatchedBox from './components/WatchedBox';
+
 import MovieList from './components/MovieList';
 import Box from './components/Box';
 import WatchedSummary from './components/WatchedSummary';
