@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Navbar from './components/Navbar';
 import Main from './components/Main';
 import Logo from './components/Logo';
@@ -23,54 +23,59 @@ export type WatchedMovie = MovieType & {
   userRating: number;
 };
 
-const tempWatchedData: WatchedMovie[] = [
-  {
-    imdbID: 'tt1375666',
-    Title: 'Inception',
-    Year: '2010',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
-    runtime: 148,
-    imdbRating: 8.8,
-    userRating: 10,
-  },
-  {
-    imdbID: 'tt0088763',
-    Title: 'Back to the Future',
-    Year: '1985',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BZmU0M2Y1OGUtZjIxNi00ZjBkLTg1MjgtOWIyNThiZWIwYjRiXkEyXkFqcGdeQXVyMTQxNzMzNDI@._V1_SX300.jpg',
-    runtime: 116,
-    imdbRating: 8.5,
-    userRating: 9,
-  },
-];
-export const tempMovieData: MovieType[] = [
-  {
-    imdbID: 'tt1375666',
-    Title: 'Inception',
-    Year: '2010',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BMjAxMzY3NjcxNF5BMl5BanBnXkFtZTcwNTI5OTM0Mw@@._V1_SX300.jpg',
-  },
-  {
-    imdbID: 'tt0133093',
-    Title: 'The Matrix',
-    Year: '1999',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BNzQzOTk3OTAtNDQ0Zi00ZTVkLWI0MTEtMDllZjNkYzNjNTc4L2ltYWdlXkEyXkFqcGdeQXVyNjU0OTQ0OTY@._V1_SX300.jpg',
-  },
-  {
-    imdbID: 'tt6751668',
-    Title: 'Parasite',
-    Year: '2019',
-    Poster:
-      'https://m.media-amazon.com/images/M/MV5BYWZjMjk3ZTItODQ2ZC00NTY5LWE0ZDYtZTI3MjcwN2Q5NTVkXkEyXkFqcGdeQXVyODk4OTc3MTY@._V1_SX300.jpg',
-  },
-];
+function Loader() {
+  return <p className='loader'>Loading...</p>;
+}
+
+interface ErrorMessageProps {
+  message: string;
+}
+function ErrorMessage({ message }: ErrorMessageProps) {
+  return (
+    <p className='error'>
+      <span>⛔</span>
+      {message}
+    </p>
+  );
+}
 export default function App() {
-  const [movies, setMovies] = useState<MovieType[]>(tempMovieData);
-  const [watched, setWatched] = useState<WatchedMovie[]>(tempWatchedData);
+  const [movies, setMovies] = useState<MovieType[]>([]);
+  const [watched, setWatched] = useState<WatchedMovie[]>([]);
+  const [isLoading, setIsLoading] = useState<boolean>(false);
+  const [error, setError] = useState<string>('');
+
+  const KEY = 'ee3cf935';
+  const query = 'in r';
+
+  useEffect(() => {
+    const fetchMovies = async () => {
+      try {
+        setIsLoading(true);
+        const res = await fetch(
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+        );
+
+        if (!res.ok) {
+          throw new Error('Something went wrong while fetching movies');
+        }
+
+        const data = await res.json();
+        if (data.Response === 'False') throw new Error('Movie not found');
+        setMovies(data.Search);
+      } catch (err) {
+        if (err instanceof Error) {
+          console.log(err.message);
+          setError(err.message);
+        } else {
+          console.log('An unknown error occurred');
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    fetchMovies();
+  }, [query]);
+
   return (
     <>
       <Navbar>
@@ -80,7 +85,10 @@ export default function App() {
       </Navbar>
       <Main>
         <Box>
-          <MovieList movies={movies} />
+          {/* {isLoading ? <Loader /> : <MovieList movies={movies} />} */}
+          {isLoading && <Loader />}
+          {!isLoading && !error && <MovieList movies={movies} />}
+          {error && <ErrorMessage message={error} />}
         </Box>
         <Box>
           <WatchedSummary watched={watched} />
