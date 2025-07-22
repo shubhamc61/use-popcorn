@@ -5,13 +5,18 @@ import { MovieType } from '../App';
 
 interface MovieListProp {
   movies: MovieType[];
+  onSelectMovie: (id: string) => void;
 }
 
-function MovieList({ movies }: MovieListProp) {
+function MovieList({ movies, onSelectMovie }: MovieListProp) {
   return (
-    <ul className='list'>
+    <ul className='list list-movies'>
       {movies.map(movie => (
-        <MovieTile movie={movie} key={movie.imdbID} />
+        <MovieTile
+          onSelectMovie={onSelectMovie}
+          movie={movie}
+          key={movie.imdbID}
+        />
       ))}
     </ul>
   );

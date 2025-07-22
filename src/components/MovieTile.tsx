@@ -3,11 +3,12 @@ import { MovieType } from '../App';
 
 type MovieTileProps = {
   movie: MovieType;
+  onSelectMovie: (id: string) => void;
 };
 
-function MovieTile({ movie }: MovieTileProps) {
+function MovieTile({ movie, onSelectMovie }: MovieTileProps) {
   return (
-    <li>
+    <li onClick={() => onSelectMovie(movie.imdbID)}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
       <h3>{movie.Title}</h3>
       <div>

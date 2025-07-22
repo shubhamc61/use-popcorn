@@ -2,8 +2,9 @@ import { WatchedMovie } from '../App';
 
 type MovieTileProps = {
   movie: WatchedMovie;
+  onDeleteWatched: (id: string) => void;
 };
-function WatchedMovieTile({ movie }: MovieTileProps) {
+function WatchedMovieTile({ movie, onDeleteWatched }: MovieTileProps) {
   return (
     <li key={movie.imdbID}>
       <img src={movie.Poster} alt={`${movie.Title} poster`} />
@@ -21,6 +22,12 @@ function WatchedMovieTile({ movie }: MovieTileProps) {
           <span>⏳</span>
           <span>{movie.runtime} min</span>
         </p>
+        <button
+          className='btn-delete'
+          onClick={() => onDeleteWatched(movie.imdbID)}
+        >
+          X
+        </button>
       </div>
     </li>
   );

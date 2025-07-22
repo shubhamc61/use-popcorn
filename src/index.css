@@ -56,6 +56,9 @@ body {
   border-radius: 0.9rem;
   overflow: auto;
   position: relative;
+  /* Hide scrollbar (Chrome, Edge, Safari) */
+  scrollbar-width: none; /* Firefox */
+  -ms-overflow-style: none; /* IE 10+ */
 }
 
 .loader {
