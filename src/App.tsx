@@ -65,6 +65,8 @@ export default function App() {
     setWatched(watched => watched.filter(movie => movie.imdbID !== id));
   };
   useEffect(() => {
+    const controller = new AbortController();
+
     const fetchMovies = async () => {
       if (query.length < 3) {
         setMovies([]);
@@ -76,7 +78,8 @@ export default function App() {
         setError('');
         setIsLoading(true);
         const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`
+          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
+          { signal: controller.signal }
         );
 
         if (!res.ok) {
@@ -98,7 +101,12 @@ export default function App() {
       }
     };
 
-    fetchMovies();
+    const timeoutId = setTimeout(fetchMovies, 500);
+
+    return () => {
+      clearTimeout(timeoutId);
+      controller.abort();
+    };
   }, [query]);
 
   return (
