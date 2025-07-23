@@ -41,11 +41,15 @@ function ErrorMessage({ message }: ErrorMessageProps) {
 }
 export default function App() {
   const [movies, setMovies] = useState<MovieType[]>([]);
-  const [watched, setWatched] = useState<WatchedMovie[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   const [query, setQuery] = useState<string>('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
+  // const [watched, setWatched] = useState<WatchedMovie[]>([]);
+  const [watched, setWatched] = useState<WatchedMovie[]>(() => {
+    const storedValue = localStorage.getItem('watched');
+    return storedValue ? JSON.parse(storedValue) : [];
+  });
 
   const KEY = 'ee3cf935';
 
@@ -64,6 +68,11 @@ export default function App() {
   const handleDeleteWatched = (id: string) => {
     setWatched(watched => watched.filter(movie => movie.imdbID !== id));
   };
+
+  useEffect(() => {
+    localStorage.setItem('watched', JSON.stringify(watched));
+  }, [watched]);
+
   useEffect(() => {
     const controller = new AbortController();
 
