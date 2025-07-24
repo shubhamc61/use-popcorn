@@ -10,6 +10,7 @@ import Box from './components/Box';
 import WatchedSummary from './components/WatchedSummary';
 import WatchedMovieList from './components/WatchedMoviesList';
 import SelectedMovie from './components/SelectedMovie';
+import { useMovies } from './customHooks/useMovies';
 
 export type MovieType = {
   imdbID: string;
@@ -40,26 +41,23 @@ function ErrorMessage({ message }: ErrorMessageProps) {
   );
 }
 export default function App() {
-  const [movies, setMovies] = useState<MovieType[]>([]);
-  const [isLoading, setIsLoading] = useState<boolean>(false);
-  const [error, setError] = useState<string>('');
   const [query, setQuery] = useState<string>('');
   const [selectedId, setSelectedId] = useState<string | null>(null);
   // const [watched, setWatched] = useState<WatchedMovie[]>([]);
+  const { movies, KEY, error, isLoading } = useMovies(query, handleCloseMovie);
+
   const [watched, setWatched] = useState<WatchedMovie[]>(() => {
     const storedValue = localStorage.getItem('watched');
     return storedValue ? JSON.parse(storedValue) : [];
   });
 
-  const KEY = 'ee3cf935';
-
   const handleSelectMovie = (id: string) => {
     setSelectedId(selectedId => (id === selectedId ? null : id));
   };
 
-  const handleCloseMovie = () => {
+  function handleCloseMovie() {
     setSelectedId(null);
-  };
+  }
 
   const handleWatchedMovies = (movie: WatchedMovie) => {
     setWatched(watched => [...watched, movie]);
@@ -72,51 +70,6 @@ export default function App() {
   useEffect(() => {
     localStorage.setItem('watched', JSON.stringify(watched));
   }, [watched]);
-
-  useEffect(() => {
-    const controller = new AbortController();
-
-    const fetchMovies = async () => {
-      if (query.length < 3) {
-        setMovies([]);
-        setError('');
-        return;
-      }
-
-      try {
-        setError('');
-        setIsLoading(true);
-        const res = await fetch(
-          `http://www.omdbapi.com/?apikey=${KEY}&s=${query}`,
-          { signal: controller.signal }
-        );
-
-        if (!res.ok) {
-          throw new Error('Something went wrong while fetching movies');
-        }
-
-        const data = await res.json();
-        if (data.Response === 'False') throw new Error('Movie not found');
-
-        setMovies(data.Search);
-      } catch (err) {
-        if (err instanceof Error) {
-          setError(err.message);
-        } else {
-          console.error('An unknown error occurred');
-        }
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    const timeoutId = setTimeout(fetchMovies, 500);
-
-    return () => {
-      clearTimeout(timeoutId);
-      controller.abort();
-    };
-  }, [query]);
 
   return (
     <>

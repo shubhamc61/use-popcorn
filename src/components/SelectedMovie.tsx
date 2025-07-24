@@ -1,7 +1,6 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import StarRating from './StarRating';
 import { Loader, WatchedMovie } from '../App';
-import { title } from 'process';
 
 interface SelectedMovieProp {
   selectedMovieId: string;
@@ -33,6 +32,13 @@ export default function SelectedMovie({
   const [movieDetails, setMovieDetails] = useState<MovieDetails | null>(null);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [userRating, setUserRating] = useState<number>(0);
+
+  const countRef = useRef(0);
+
+  useEffect(() => {
+    if (userRating) countRef.current = countRef.current + 1;
+  }, [userRating]);
+
   const isWatched = watched
     .map(movie => movie.imdbID)
     .includes(selectedMovieId);
