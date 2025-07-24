@@ -3,12 +3,12 @@ import { MovieType } from '../App';
 
 const KEY = 'ee3cf935';
 
-export function useMovies(query: string, callback: () => void) {
+export function useMovies(query: string) {
   const [movies, setMovies] = useState<MovieType[]>([]);
   const [isLoading, setIsLoading] = useState<boolean>(false);
   const [error, setError] = useState<string>('');
   useEffect(() => {
-    callback?.();
+    // callback?.();
     const controller = new AbortController();
 
     const fetchMovies = async () => {
